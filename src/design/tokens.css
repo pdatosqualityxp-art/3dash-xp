@@ -1,0 +1,28 @@
+@layer base {
+  :root {
+    --bg: #f8fafc;
+    --bg-elevated: #ffffff;
+    --surface: #ecfeff;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --border: rgba(15, 118, 110, 0.2);
+    --primary: #0f766e;
+    --primary-soft: rgba(15, 118, 110, 0.12);
+  }
+
+  html.dark {
+    --bg: #020817;
+    --bg-elevated: #0f172a;
+    --surface: #062c2a;
+    --text: #f8fafc;
+    --text-muted: #cbd5e1;
+    --border: rgba(94, 234, 212, 0.25);
+    --primary: #5eead4;
+    --primary-soft: rgba(94, 234, 212, 0.18);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+}
