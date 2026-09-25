@@ -24,6 +24,16 @@ export type GeographicSalesMetric = {
   percent: number
 }
 
+export type MapSalesPoint = {
+  id: string
+  city: string
+  province: string
+  region: string
+  totalVenta: number
+  latitude: number
+  longitude: number
+}
+
 export type DashboardData = {
   totalRevenue: number
   totalUnits: number
@@ -32,6 +42,7 @@ export type DashboardData = {
   topClients: ClientSalesMetric[]
   topProducts: ProductSalesMetric[]
   geographicSales: GeographicSalesMetric[]
+  mapPoints: MapSalesPoint[]
 }
 
 type SaleRow = {
@@ -47,12 +58,88 @@ type SaleRow = {
 type ClientRow = {
   idcliente: string
   nomcliente: string
+  paiscliente: string | null
   comautonomacliente: string | null
+  provinciacliente: string | null
+  poblacioncliente: string | null
 }
 
 type ProductRow = {
   idprod: string
   nomprod: string
+}
+
+const normalizeText = (value: string | null | undefined) =>
+  String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+const cityCoordinates: Record<string, [number, number]> = {
+  madrid: [40.4168, -3.7038],
+  barcelona: [41.3851, 2.1734],
+  valencia: [39.4699, -0.3763],
+  sevilla: [37.3891, -5.9845],
+  malaga: [36.7213, -4.4214],
+  zaragoza: [41.6488, -0.8891],
+  bilbao: [43.263, -2.934],
+  murcia: [37.9922, -1.1307],
+  palma: [39.5696, 2.6502],
+  'las palmas': [28.1248, -15.43],
+  'santa cruz de tenerife': [28.4636, -16.2518],
+  alicante: [38.3452, -0.4815],
+  cordoba: [37.8882, -4.7794],
+  granada: [37.1773, -3.5986],
+  toledo: [39.8628, -4.0273],
+  valladolid: [41.6523, -4.7286],
+  salamanca: [40.9701, -5.6635],
+  'a coruna': [43.3623, -8.4115],
+  coruna: [43.3623, -8.4115],
+  lugo: [43.012, -7.557],
+  oviedo: [43.3619, -5.8494],
+  pamplona: [42.8125, -1.6458],
+  navarra: [42.8125, -1.6458],
+  logrono: [42.4658, -2.4499],
+  'la rioja': [42.4658, -2.4499],
+  albacete: [38.9944, -1.8564],
+  cuenca: [40.0704, -2.1374],
+  guadalajara: [40.6327, -3.167],
+  almeria: [36.8402, -2.4679],
+  huelva: [37.2579, -6.948],
+  jaen: [37.7796, -3.7847],
+  caceres: [39.4722, -6.3719],
+  badajoz: [38.8794, -6.9707],
+  'castilla y leon': [41.65, -4.72],
+  'castilla la mancha': [39.7, -3.5],
+  andalusia: [37.4, -4.8],
+  catalonia: [41.6, 1.8],
+  galicia: [42.9, -8.1],
+  'basque country': [43.2, -2.9],
+  aragon: [41.5, -0.9],
+  'balearic islands': [39.56, 2.65],
+  asturias: [43.36, -5.84],
+  extremadura: [39.3, -6.1],
+  'canary islands': [28.1, -15.4],
+  navarre: [42.81, -1.65],
+}
+
+const resolveCoordinates = (client: ClientRow): [number, number] => {
+  const candidates = [
+    client.poblacioncliente,
+    client.provinciacliente,
+    client.comautonomacliente,
+    'madrid',
+  ]
+
+  for (const candidate of candidates) {
+    const normalized = normalizeText(candidate)
+    if (!normalized) continue
+    const matchKey = Object.keys(cityCoordinates).find((key) => normalizeText(key) === normalized)
+    if (matchKey) return cityCoordinates[matchKey]
+  }
+
+  return cityCoordinates.madrid
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
@@ -138,6 +225,34 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const totalRegionalRevenue = geographicSales.reduce((sum, item) => sum + item.totalVenta, 0) || 1
 
+  const mapPoints = new Map<string, MapSalesPoint>()
+  for (const sale of sales) {
+    const client = clients.find((item) => String(item.idcliente) === String(sale.idcliente))
+    if (!client) continue
+
+    const city = String(client.poblacioncliente ?? client.provinciacliente ?? client.comautonomacliente ?? 'Madrid').trim() || 'Madrid'
+    const province = String(client.provinciacliente ?? client.comautonomacliente ?? city).trim() || city
+    const region = String(client.comautonomacliente ?? client.provinciacliente ?? city).trim() || city
+    const key = `${city}|${province}|${region}`
+    const [latitude, longitude] = resolveCoordinates(client)
+    const totalVenta = Number(sale.totalventa ?? 0)
+    const current = mapPoints.get(key)
+
+    if (current) {
+      current.totalVenta += totalVenta
+    } else {
+      mapPoints.set(key, {
+        id: key,
+        city,
+        province,
+        region,
+        totalVenta,
+        latitude,
+        longitude,
+      })
+    }
+  }
+
   return {
     totalRevenue,
     totalUnits,
@@ -154,6 +269,7 @@ export async function getDashboardData(): Promise<DashboardData> {
       totalVenta: item.totalVenta,
       percent: (item.totalVenta / totalRegionalRevenue) * 100,
     })),
+    mapPoints: Array.from(mapPoints.values()).sort((a, b) => b.totalVenta - a.totalVenta),
   }
 }
 

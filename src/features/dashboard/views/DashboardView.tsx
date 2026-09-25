@@ -3,6 +3,7 @@ import { BarChart3, DollarSign, MapPinned, Package, TrendingUp, Users } from 'lu
 import { MetricCard } from '../components/MetricCard'
 import { BarChartList } from '../components/BarChartList'
 import { GeographicBreakdown } from '../components/GeographicBreakdown'
+import { GeoChoroplethMap } from '../components/GeoChoroplethMap'
 import { getDashboardData, type DashboardData } from '../services/dashboardService'
 import { useLanguage } from '../../../shared/context/LanguageContext'
 
@@ -92,6 +93,8 @@ export function DashboardView() {
     percent: item.percent,
   }))
 
+  const mapPoints = dashboardData.mapPoints
+
   return (
     <section className="space-y-6">
       <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900 md:p-8">
@@ -162,6 +165,22 @@ export function DashboardView() {
             formatValue={(value) => currencyFormatter.format(value)}
           />
         </div>
+      </div>
+
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div className="mb-6 flex items-center gap-3">
+          <MapPinned className="text-sky-600 dark:text-sky-400" size={20} />
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">{t('dashboard_map_title')}</h2>
+        </div>
+        <GeoChoroplethMap
+          points={mapPoints}
+          formatValue={(value) => currencyFormatter.format(value)}
+          title={t('dashboard_map_title')}
+          regionLabel={t('dashboard_map_region')}
+          cityLabel={t('dashboard_map_city')}
+          valueLabel={t('dashboard_map_value')}
+          emptyLabel={t('dashboard_map_empty')}
+        />
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
