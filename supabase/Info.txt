@@ -1,0 +1,72 @@
+En Supabase.
+Vamos a crear una base de datos de una empresa ficticia. Su negocio es venta de electrodomésticos industriales y su respectivo servicio posventa en cuanto a instalaciones, reparaciones, mantenimiento. 
+Te voy a indicar las tablas, ten en cuenta el PK primary key
+
+1. Tabla clientes
+•	idCliente (PK)
+•	nomCliente
+•	paisCliente
+•	comAutonomaCliente
+•	provinciaCliente
+•	poblacionCliente
+2. Tabla proveedores
+•	idProveedor (PK)
+•	nomProveedor
+•	paisProveedor
+•	comAutonomaProveedor
+•	provinciaProveedor
+•	poblacionProveedor
+3. Tabla productos
+•	idProd (PK)
+•	nomProd
+•	descProd
+•	precioProd
+4. Tabla compras
+•	idCompra (PK)
+•	idProveedor (FK)
+•	idProd (FK)
+•	unidadesCompra
+•	precioUnidadCompra
+•	totalCompra
+•	fechaCompra
+5. Tabla ventas
+•	idVenta (PK)
+•	idProd (FK)
+•	idCliente (FK)
+•	unidadesVenta
+•	precioUnidadVenta
+•	totalVenta
+•	fechaVenta
+6. Tabla estadoIntervencion
+•	idEstado (PK)
+•	nomEstado
+•	descEstado
+7. Tabla intervenciones
+•	idIntervencion (PK)
+•	idProd (FK)
+•	idServicio (FK)
+•	idEstado (FK)
+•	idCliente (FK)
+8. Tabla almacen
+•	idAlmacen (PK)
+•	nomAlmacen
+•	descAlmacen
+9. Tabla stock
+•	idProd (PK, FK)
+•	idAlmacen (PK, FK)
+•	cantidadStock
+10. Tabla servicios
+•	idServicio (PK)
+•	nomServicio
+•	descServicio
+•	precioServicioProveedor
+•	precioServicioCliente
+
+PASS base de datos Supabase
+fGeeQeuGLtvttjep
+
+CONEXION
+API URL
+https://xuqyjpohwqolaudkjdqo.supabase.co/rest/v1/
+Publishable key
+sb_publishable_ilhjfTyuYN1Ez-qRgH_78w_LLlrt6yI

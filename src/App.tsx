@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DashboardView } from './features/dashboard/views/DashboardView'
 import { DescriptionView } from './features/description/DescriptionView'
 import { HomeView } from './features/home/HomeView'
 import { InfoView } from './features/info/InfoView'
@@ -7,7 +8,7 @@ import { ThemeProvider } from './shared/context/ThemeContext'
 import { LanguageProvider } from './shared/context/LanguageContext'
 
 function App() {
-  const [activeView, setActiveView] = useState<'home' | 'info' | 'description'>('home')
+  const [activeView, setActiveView] = useState<'home' | 'info' | 'description' | 'dashboard'>('home')
 
   const renderView = () => {
     switch (activeView) {
@@ -17,6 +18,8 @@ function App() {
         return <InfoView />
       case 'description':
         return <DescriptionView />
+      case 'dashboard':
+        return <DashboardView />
       default:
         return <HomeView />
     }

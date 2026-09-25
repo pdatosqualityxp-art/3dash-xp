@@ -2,8 +2,8 @@ import { Sidebar } from './Sidebar'
 
 type LayoutProps = {
   children: React.ReactNode
-  activeView: 'home' | 'info' | 'description'
-  onChangeView: (view: 'home' | 'info' | 'description') => void
+  activeView: 'home' | 'info' | 'description' | 'dashboard'
+  onChangeView: (view: 'home' | 'info' | 'description' | 'dashboard') => void
 }
 
 export function Layout({ children, activeView, onChangeView }: LayoutProps) {

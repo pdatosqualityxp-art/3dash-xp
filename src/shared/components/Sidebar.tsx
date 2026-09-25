@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
+  BarChart3,
   FileText,
   Home,
   Info,
@@ -18,6 +19,7 @@ const navItems = [
   { key: 'home', icon: Home },
   { key: 'info', icon: Info },
   { key: 'description', icon: FileText },
+  { key: 'dashboard', icon: BarChart3 },
   { key: 'item-1', icon: Home },
   { key: 'item-2', icon: Info },
   { key: 'item-3', icon: FileText },
@@ -50,7 +52,7 @@ const navItems = [
   { key: 'item-30', icon: FileText },
 ] as const
 
-type ViewKey = 'home' | 'info' | 'description'
+type ViewKey = 'home' | 'info' | 'description' | 'dashboard'
 type NavKey = ViewKey | `item-${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30}`
 
 type SidebarProps = {
@@ -143,7 +145,7 @@ export function Sidebar({ activeView, onChangeView }: SidebarProps) {
     'bg-gradient-to-r from-[#0f766e] via-[#0b8a7d] to-[#14b8a6] text-white shadow-lg shadow-[#0f766e]/20 dark:from-[#0b5d5a] dark:via-[#0d6f6d] dark:to-[#11a59b] dark:text-white'
 
   const handleNavClick = (key: NavKey) => {
-    if (key === 'home' || key === 'info' || key === 'description') {
+    if (key === 'home' || key === 'info' || key === 'description' || key === 'dashboard') {
       onChangeView(key)
     }
   }
