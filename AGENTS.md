@@ -49,8 +49,14 @@ El layout principal consta de una barra de navegación lateral adaptable (`Sideb
 - Debe escuchar en tiempo real el cambio del botón de tema (Luna/Sol).
 - Aplicar la clase `dark` de Tailwind al elemento raíz (`<html>` o contenedor principal) y persistir la preferencia en `localStorage`.
 
-## 5. Sistema Multi-idioma (i18n)
+## 5. Sistema Multi-idioma (i18n) y Regla de Textos
 - Crear un sistema ligero en `src/shared/i18n/`.
 - Soportar tres idiomas estrictos: **Català (ca)**, **Español (es)** y **English (en)**.
-- Implementar un `LanguageContext` que permita cambiar el idioma de toda la interfaz dinámicamente desde el selector del menú. Los textos de los items del menú y las vistas deben traducirse a través de este sistema.
+- **REGLA ESTRICTA DE DESARROLLO (OBLIGATORIO):** Queda prohibido escribir textos planos o hardcodeados (ej: `<h1>Dashboard</h1>` o `<span>Clientes</span>`) en cualquier componente de UI. 
+- Todo texto estático de la interfaz debe estructurarse obligatoriamente en los JSON de traducción (`es.json`, `ca.json`, `en.json`) y consumirse mediante el hook/contexto de traducción. *(Los datos dinámicos provenientes de Supabase, como nombres de clientes o productos, se muestran tal cual se reciben de la base de datos).*
 
+## 6. Base de Datos y Seguridad (Supabase)
+- El proyecto se conecta a Supabase mediante la API oficial (`@supabase/supabase-js`).
+- Las credenciales deben leerse obligatoriamente de las variables de entorno del archivo `.env` (`VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`).
+- Está prohibido exponer claves secretas (`sb_secret_...`) en el código cliente[cite: 6]. 
+- Consultar la especificación detallada en `spec/config/supabase.md` y el esquema SQL en `supabase/SQLcontent.sql`.
